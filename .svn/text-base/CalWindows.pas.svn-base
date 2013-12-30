@@ -220,7 +220,6 @@ type
     pmj_edt_ccqh: TRzEdit;
     pmj_ccqnrS: TRzEdit;
     pmj_cb_ckxz: TRzComboBox;
-    pmj_Code: TRzComboBox;
     pmj_ccqnrE: TRzEdit;
     pmjSfqy: TCheckBox;
     Label31: TLabel;
@@ -232,6 +231,43 @@ type
     butbxzOK: TButton;
     butbxzCancel: TButton;
     Panel1: TPanel;
+    pnlBB1: TPanel;
+    bbNum1: TRzSpinEdit;
+    Label37: TLabel;
+    butBb1: TTorryButton;
+    pnlBB2: TPanel;
+    Label38: TLabel;
+    butBb2: TTorryButton;
+    bbNum2: TRzSpinEdit;
+    pnlBB3: TPanel;
+    Label39: TLabel;
+    butBb3: TTorryButton;
+    bbNum3: TRzSpinEdit;
+    pmj_Code: TRzComboBox;
+    pnlWarn1: TPanel;
+    lblWarn1: TLabel;
+    Label40: TLabel;
+    edtSnph1: TRzEdit;
+    Label41: TLabel;
+    edtSnph_Num1: TRzNumericEdit;
+    Label42: TLabel;
+    pnlWarn2: TPanel;
+    lblWarn2: TLabel;
+    Label43: TLabel;
+    Label44: TLabel;
+    Label45: TLabel;
+    edtSnph2: TRzEdit;
+    edtSnph_Num2: TRzNumericEdit;
+    pnlWarn3: TPanel;
+    lblWarn3: TLabel;
+    Label46: TLabel;
+    Label47: TLabel;
+    Label48: TLabel;
+    edtSnph3: TRzEdit;
+    edtSnph_Num3: TRzNumericEdit;
+    butPh1: TTorryButton;
+    butPh2: TTorryButton;
+    butPh3: TTorryButton;
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
 
@@ -258,6 +294,12 @@ type
     procedure butStartClick(ApackLineNo: integer );
     procedure butbxzCancelClick(Sender: TObject);
     procedure butbxzOKClick(Sender: TObject);
+    procedure butBb1Click(Sender: TObject);
+    procedure butBb2Click(Sender: TObject);
+    procedure butBb3Click(Sender: TObject);
+    procedure butPh1Click(Sender: TObject);
+    procedure butPh2Click(Sender: TObject);
+    procedure butPh3Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -311,7 +353,9 @@ type
     function getNextRunTimer(ACurPDkNo: integer  ): integer ; //获取下一运行定时器，从1开始的下标
     procedure AutoRefreshPackLineLed(APackLine, AScreenNo: integer;isPack : boolean=false); //自动刷新包装线的2个LED及plist
     procedure saveBzxConfig(ABzxNo : integer);
-
+    procedure sendModifyPacket(APackNum,srcNum, ModifyNum : integer);  //下发补包命令
+    procedure readiniSnph(APackLine : integer);
+    procedure saveiniSbph(APackLine : integer;ASnph:string;ASnphNum,AType: integer);
   public
     { Public declarations }
      d_haveGetDate: TDateTime ;//当前已经取到车牌号的时间
@@ -425,7 +469,7 @@ procedure TfrmCalWindows.jsqProc1(Amsg : array of BYTE ; APackLine,Alen : intege
 var
   curcount , i : integer ;
   sSql ,sFileName : string ;
-  NextDk: integer ;  
+  NextDk: integer ;
 begin
  // FreeOnTerminate:=true ;
  // with frmCalWindows do
@@ -471,14 +515,54 @@ begin
 
         //这里开始往 LED发送数据 start
 
-         //2013-12-13  下发数量的变动了
+         // 下发数量的变动了
         if (curcount>lastcount[0]) and (curcount>0) and (curcount<Num1.IntValue) and (Num1.IntValue>0) then
         begin
+          APackLineInfo[0].Snph_ShengNum:=APackLineInfo[0].Snph_ShengNum-(curcount-lastcount[0]) ;
           RefreshLedT:= TRefreshLedThread.Create(0,dk1.IntValue);
           RefreshLedT.Resume;
         end;
         //这里开始往 LED发送数据 end
-          
+
+        //如果当前批次数量少于100包 ，那么预警提示2013-12-22 start
+        if (APackLineInfo[0].Snph_ShengNum<100) and (APackLineInfo[0].Snph_ShengNum>0) then
+        begin
+           if not pnlWarn1.Visible then
+             edtSnph1.Text :=APackLineInfo[0].SnPh ;
+           pnlWarn1.Visible := true ;
+           lblWarn1.Caption:=APackLineInfo[0].SnPh+' 已少于100包,请重新输入 ' ;
+           application.ProcessMessages;
+        end
+        else if (APackLineInfo[0].Snph_ShengNum<=0) then
+        begin
+           //重新读取ini文件中的snph 和 数量
+           readiniSnph(0);
+           //这里要重新下发喷码内容2013-12-24 start
+           try
+             if APackLineInfo[0].pmjSfqy then
+             begin
+               pmj1pmnr.Text :=APackLineInfo[0].SnPh;
+               setCurRegisterVal(0,APackLineInfo[0].ccqnrS+pmj1pmnr.Text+ APackLineInfo[0].ccqnrE);
+
+               sleep(100);
+               setCurRegister(0);
+               sleep(300);
+               resetCurRegister(0) ;
+               sleep(200);
+               resetCurRegister(0) ;
+               sleep(100);
+               resetCurRegister(0) ;
+             //  sleep(200);
+             end;
+           except
+             memo1.Lines.Add('Repeat Send Pm') ;
+           end;
+           //这里要重新下发喷码内容2013-12-24 end
+        end
+        else
+           pnlWarn1.Visible :=false ;
+        //如果当前批次数量少于100包 ，那么预警提示2013-12-22 end
+
         if (Num1.IntValue>0) and ((Num1.IntValue-curcount)<=cstPreYjNumber) and (JsqStatus[0] =1)  then    //提前10告警
         begin
             JsqAlarm(0);
@@ -508,6 +592,7 @@ begin
 
         if (Num1.IntValue>0) and (Num1.IntValue<=curcount) and (curcount>0) and (JsqStatus[0]<>0) then
         begin
+          saveiniSbph(0,'',APackLineInfo[0].Snph_ShengNum,1) ; //1表示装完保存 ,0设置保存
           ybzsl1.Text:= inttostr(curcount) ;
           JsqStatus[0]:=0;
           sleep(200) ;
@@ -598,7 +683,7 @@ procedure TfrmCalWindows.jsqProc2(Amsg : array of BYTE ; APackLine,Alen : intege
 var
   curcount , i : integer ;
   sSql ,sFileName : string ;
-  NextDk: integer ;  
+  NextDk: integer ;
 begin
  // FreeOnTerminate:=true ;
  // with frmCalWindows do
@@ -643,15 +728,54 @@ begin
 
         //这里开始往 LED发送数据 start
 
-        //2013-12-13  下发数量的变动了
+         // 下发数量的变动了
         if (curcount>lastcount[1]) and (curcount>0) and (curcount<Num2.IntValue) and (Num2.IntValue>0) then
         begin
+          APackLineInfo[1].Snph_ShengNum:=APackLineInfo[1].Snph_ShengNum-(curcount-lastcount[1]) ;
           RefreshLedT:= TRefreshLedThread.Create(1,dk2.IntValue);
           RefreshLedT.Resume;
         end;
         //这里开始往 LED发送数据 end
-        //这里开始往 LED发送数据 end
-          
+
+        //如果当前批次数量少于100包 ，那么预警提示2013-12-22 start
+        if (APackLineInfo[1].Snph_ShengNum<100) and (APackLineInfo[1].Snph_ShengNum>0) then
+        begin
+           if not pnlWarn2.Visible then
+             edtSnph2.Text :=APackLineInfo[1].SnPh ;
+           pnlWarn2.Visible := true ;
+           lblWarn2.Caption:=APackLineInfo[1].SnPh+' 已少于100包,请重新输入 ' ;
+           application.ProcessMessages;
+        end
+        else if (APackLineInfo[1].Snph_ShengNum<=0) then
+        begin
+           //重新读取ini文件中的snph 和 数量
+           readiniSnph(1);
+           //这里要重新下发喷码内容2013-12-24 start
+           try
+             if APackLineInfo[1].pmjSfqy then
+             begin
+               pmj2pmnr.Text :=APackLineInfo[1].SnPh;
+               setCurRegisterVal(1,APackLineInfo[1].ccqnrS+pmj2pmnr.Text+ APackLineInfo[1].ccqnrE);
+
+               sleep(100);
+               setCurRegister(1);
+               sleep(300);
+               resetCurRegister(1) ;
+               sleep(200);
+               resetCurRegister(1) ;
+               sleep(100);
+               resetCurRegister(1) ;
+             //  sleep(200);
+             end;
+           except
+             memo2.Lines.Add('Repeat Send Pm ') ;
+           end;
+           //这里要重新下发喷码内容2013-12-24 end
+        end
+        else
+           pnlWarn2.Visible :=false ;
+        //如果当前批次数量少于100包 ，那么预警提示2013-12-22 end
+
         if (Num2.IntValue>0) and ((Num2.IntValue-curcount)<=cstPreYjNumber) and (JsqStatus[1] =1)  then    //提前10告警
         begin
             JsqAlarm(1);
@@ -681,6 +805,7 @@ begin
 
         if (Num2.IntValue>0) and (Num2.IntValue<=curcount) and (curcount>0) and (JsqStatus[1]<>0) then
         begin
+          saveiniSbph(1,'',APackLineInfo[1].Snph_ShengNum,1) ; //1表示装完保存 ,0设置保存
           ybzsl2.Text:= inttostr(curcount) ;
           JsqStatus[1]:=0;
           sleep(200) ;
@@ -696,12 +821,8 @@ begin
           JsqLjClear(1);
           JsqLjClear(1);
 
-          XhDk[1]:=dk2.IntValue;
-          tXhSf2.Enabled :=true ;  // 延时处理继电器吸合状态
-
-        //  AScreenInfo[dk1.IntValue-1].Pm_PdCar.Delete(1); //装车完需要删除一条记录
-
-         // APackLineInfo[0].WaitVehicleNum:=APackLineInfo[0].WaitVehicleNum-1 ;//等待车辆-1
+       //   XhDk[1]:=dk2.IntValue;
+      //    tXhSf2.Enabled :=true ;  // 延时处理继电器吸合状态
 
           sSql:='update pm_data set readok=1 '+
                 ' where readok=170 and shipment_number='+quotedstr(trim(fpbh2.Text)) ;
@@ -777,7 +898,7 @@ procedure TfrmCalWindows.jsqProc3(Amsg : array of BYTE ; APackLine,Alen : intege
 var
   curcount , i : integer ;
   sSql ,sFileName : string ;
-  NextDk: integer ;  
+  NextDk: integer ;
 begin
  // FreeOnTerminate:=true ;
  // with frmCalWindows do
@@ -821,15 +942,54 @@ begin
           exit ;
         //这里开始往 LED发送数据 start
 
-        //2013-12-13  下发数量的变动了
+         // 下发数量的变动了
         if (curcount>lastcount[2]) and (curcount>0) and (curcount<Num3.IntValue) and (Num3.IntValue>0) then
         begin
+          APackLineInfo[2].Snph_ShengNum:=APackLineInfo[2].Snph_ShengNum-(curcount-lastcount[2]) ;
           RefreshLedT:= TRefreshLedThread.Create(2,dk3.IntValue);
           RefreshLedT.Resume;
         end;
         //这里开始往 LED发送数据 end
-        //这里开始往 LED发送数据 end
-          
+
+        //如果当前批次数量少于100包 ，那么预警提示2013-12-22 start
+        if (APackLineInfo[2].Snph_ShengNum<100) and (APackLineInfo[2].Snph_ShengNum>0) then
+        begin
+           if not pnlWarn3.Visible then
+             edtSnph3.Text :=APackLineInfo[2].SnPh ;
+           pnlWarn3.Visible := true ;
+           lblWarn3.Caption:=APackLineInfo[2].SnPh+' 已少于100包,请重新输入 ' ;
+           application.ProcessMessages;
+        end
+        else if (APackLineInfo[2].Snph_ShengNum<=0) then
+        begin
+           //重新读取ini文件中的snph 和 数量
+           readiniSnph(2);
+           //这里要重新下发喷码内容2013-12-24 start
+           try
+             if APackLineInfo[2].pmjSfqy then
+             begin
+               pmj3pmnr.Text :=APackLineInfo[2].SnPh;
+               setCurRegisterVal(2,APackLineInfo[2].ccqnrS+pmj3pmnr.Text+ APackLineInfo[2].ccqnrE);
+
+               sleep(100);
+               setCurRegister(2);
+               sleep(300);
+               resetCurRegister(2) ;
+               sleep(200);
+               resetCurRegister(2) ;
+               sleep(100);
+               resetCurRegister(2) ;
+             //  sleep(200);
+             end;
+           except
+             memo3.Lines.Add('Repeat Send Pm ') ;
+           end;
+           //这里要重新下发喷码内容2013-12-24 end
+        end
+        else
+           pnlWarn3.Visible :=false ;
+        //如果当前批次数量少于100包 ，那么预警提示2013-12-22 end
+
         if (Num3.IntValue>0) and ((Num3.IntValue-curcount)<=cstPreYjNumber) and (JsqStatus[2] =1)  then    //提前10告警
         begin
             JsqAlarm(2);
@@ -859,6 +1019,7 @@ begin
 
         if (Num3.IntValue>0) and (Num3.IntValue<=curcount) and (curcount>0) and (JsqStatus[2]<>0) then
         begin
+          saveiniSbph(2,'',APackLineInfo[2].Snph_ShengNum,1) ; //1表示装完保存 ,0设置保存
           ybzsl3.Text:= inttostr(curcount) ;
           JsqStatus[2]:=0;
           sleep(200) ;
@@ -874,8 +1035,8 @@ begin
           JsqLjClear(2);
           JsqLjClear(2);
 
-          XhDk[2]:=dk3.IntValue;
-          tXhSf3.Enabled :=true ;  // 延时处理继电器吸合状态
+       //   XhDk[2]:=dk3.IntValue;
+       //   tXhSf3.Enabled :=true ;  // 延时处理继电器吸合状态
 
         //  AScreenInfo[dk3.IntValue-1].Pm_PdCar.Delete(1); //装车完需要删除一条记录
 
@@ -963,7 +1124,6 @@ begin
  // jsq2.OnComm:=nil ;
  // jsq3.OnComm:=nil ;
 
-
   Dm.ADOCnn.Execute('update pm_data set readok=0 where readok=169 or readok=170 ');
   InitUserOption ;
   initPackLine(true,0) ;
@@ -983,6 +1143,8 @@ begin
     TDelever[i].Enabled :=false ;
     TDelever[i].Tag :=i ;//用来表示包装线
     TDelever[i].Interval :=(cstDkqCssksj+i*6) *1000 ;  //设置的是秒数 ,每个延时定时器稍微错开点
+  //  TDelever[i].OnTimer:=TDeleverTimer ;
+   // tXhSf3Timer
     TDelever[i].OnTimer:=TDeleverTimer ;
   end;
 
@@ -1040,7 +1202,9 @@ begin
       initScreenT.Resume;
     end ;
   end ;
-
+  pnlBB1.Visible :=cstCanModifyPacket ;
+  pnlBB2.Visible :=cstCanModifyPacket ;
+  pnlBB3.Visible :=cstCanModifyPacket ;
 
 end;
 
@@ -1081,6 +1245,12 @@ begin
         APackLineInfo[iCicle].SnPz:=inifile.ReadString(vs,'cb_pz_pzxz',''); ;
         APackLineInfo[iCicle].Yi_DyBdzt:=inifile.ReadString(vs,'bzx_cb_dkbdzt','');
         APackLineInfo[iCicle].ZdybdSjjg :=inifile.ReadInteger(vs,'bzx_sedt_zdybdjg',2);
+        APackLineInfo[iCicle].SnPh:=inifile.ReadString(vs,'edtSnph','');
+        APackLineInfo[iCicle].Snph_Num:=inifile.ReadInteger(vs,'edtSnph_Num',2300);
+        if inifile.ReadInteger(vs,'Snph_ShengNum',0) =0 then
+           APackLineInfo[iCicle].Snph_ShengNum:=inifile.ReadInteger(vs,'edtSnph_Num',2300)
+        else
+           APackLineInfo[iCicle].Snph_ShengNum:=inifile.ReadInteger(vs,'Snph_ShengNum',0);
 
         APackLineInfo[iCicle].Jsq_SelectCk :=inifile.ReadInteger(vs,'cb_jsq_ckxz',0) ;
 
@@ -1436,8 +1606,8 @@ begin
            if (cardID=loadCard) and ((APacklineInfo[iPNo].Packing ) or (sfBrushCard='1')) then
              exit ;
 
-           if cardID=loadCard then
-           begin
+           if (cardID=loadCard ) and (inttostr(dkq_Ch)=trim((TListCom as TETSListView).Items[0].SubItems[2]) ) then
+           begin   //卡号相等 and 道口一样
                // 控制 刷卡 2013-09-6 start
                 //如果不允许提前刷卡;0 不允许；1允许 ;同时该包装线正在装车的
                if (cstPreShuaKa=0) and (APackLineInfo[iPNo].PackIng) then
@@ -2083,7 +2253,7 @@ procedure TRefreshLedThread.Execute;
 var
   sViewName ,sNum ,sUpValue : string ;
 begin
-   FreeOnTerminate:=true ;
+  FreeOnTerminate:=true ;
   with frmCalWindows do
   begin
 
@@ -2274,7 +2444,12 @@ begin
             (TSnpzCom as TRzEdit).Text :=trim((TListCom as TETSListView).Items[0].SubItems[5]);
             (TCardCom as TRzEdit).Text :=trim((TListCom as TETSListView).Items[0].SubItems[1]);
             (TfpbhCom as TRzEdit).Text :=trim((TListCom as TETSListView).Items[0].SubItems[7]);
-            if (APackLineInfo[iPackNo-1].pmjsfqy) and (APackLineInfo[iPackNo-1].ccqnrCode='1') then
+            { 0 无
+              1 批号
+              2 运至地代码
+              3 批号+运至地代码
+              4 运至地代码+批号}  //目前没有运至地代码 ，只有批号
+           { if (APackLineInfo[iPackNo-1].pmjsfqy) and (APackLineInfo[iPackNo-1].ccqnrCode='1') then
               (TpmjpmnrCom as TRzEdit).Text :=trim((TListCom as TETSListView).Items[0].SubItems[4])
             else if (APackLineInfo[iPackNo-1].pmjsfqy) and (APackLineInfo[iPackNo-1].ccqnrCode='2') then
               (TpmjpmnrCom as TRzEdit).Text :=trim((TListCom as TETSListView).Items[0].SubItems[5])
@@ -2282,7 +2457,11 @@ begin
               (TpmjpmnrCom as TRzEdit).Text :=trim((TListCom as TETSListView).Items[0].SubItems[5])+
                              trim((TListCom as TETSListView).Items[0].SubItems[4])
             else
-              (TpmjpmnrCom as TRzEdit).Text :='' ;
+              (TpmjpmnrCom as TRzEdit).Text :='' ;    }
+            if (APackLineInfo[iPackNo-1].pmjsfqy) then
+              (TpmjpmnrCom as TRzEdit).Text :=APackLineInfo[iPackNo-1].SnPh
+            else
+              (TpmjpmnrCom as TRzEdit).Text :='' ;  
 
             //接下去更新 待发送的列表
 
@@ -2489,8 +2668,20 @@ begin
 
 
               lsnpz:= trim((TListCom as TETSListView).Items[j].SubItems[5]);
-              lsnpz:=RefStringAll_Wlpz(lsnpz);
+              lsnpz:=stringreplace(lsnpz,'(','',[rfReplaceAll]);
+              lsnpz:=stringreplace(lsnpz,'（','',[rfReplaceAll]);
+              lsnpz:=stringreplace(lsnpz,')','',[rfReplaceAll]);
+              lsnpz:=stringreplace(lsnpz,'）','',[rfReplaceAll]);
+              lsnpz:=stringreplace(lsnpz,'袋装','',[rfReplaceAll]);
+              lsnpz:=stringreplace(lsnpz,'散装','',[rfReplaceAll]);
+              lsnpz:=stringreplace(lsnpz,'贡江PC','贡 ',[rfReplaceAll]) ;
+              lsnpz:=stringreplace(lsnpz,'贡江PO','贡 ',[rfReplaceAll]) ;
+              lsnpz:=stringreplace(lsnpz,'P.','P',[rfIgnoreCase]) ;
+              while length(lsnpz)<8 do
+                lsnpz:=' '+lsnpz ;
 
+              if length(lsnpz)>8 then
+                lsnpz:=copy(lsnpz,1,8 )  ;
               waitCar:=waitCar+lsnpz  ; // 车牌号+水泥品种
 
               while length(waitCar)<(cstlength-1) do
@@ -2549,7 +2740,20 @@ begin
 
                   if (TListCom as TETSListView ).Items.Count=0 then //表示第一行
                   begin
-                     lsnpz:=RefStringAll_Wlpz(lsnpz);
+                     lsnpz:=stringreplace(lsnpz,'(','',[rfReplaceAll]);
+                     lsnpz:=stringreplace(lsnpz,'（','',[rfReplaceAll]);
+                     lsnpz:=stringreplace(lsnpz,')','',[rfReplaceAll]);
+                     lsnpz:=stringreplace(lsnpz,'）','',[rfReplaceAll]);
+                     lsnpz:=stringreplace(lsnpz,'袋装','',[rfReplaceAll]);
+                     lsnpz:=stringreplace(lsnpz,'散装','',[rfReplaceAll]);
+                     lsnpz:=stringreplace(lsnpz,'贡江PC','贡 ',[rfReplaceAll]) ;
+                     lsnpz:=stringreplace(lsnpz,'贡江PO','贡 ',[rfReplaceAll]) ;
+                     lsnpz:=stringreplace(lsnpz,'P.','P',[rfIgnoreCase]) ;
+                     while length(lsnpz)<8 do
+                      lsnpz:=' '+lsnpz ;
+
+                     if length(lsnpz)>8 then
+                      lsnpz:=copy(lsnpz,1,8 )  ;
                      waitCar:=waitCar+lsnpz  ; // 车牌号+水泥品种
 
                      while length(waitCar)<cstLength do
@@ -2710,7 +2914,22 @@ begin
          begin //表示已经提前刷卡 ,需要把已刷卡的车辆和水泥品种放第一行
             waitCar:=trim((TListCom as TETSListView).Items[j].SubItems[0]);
             waitCar:=RefStringAll_Car(waitCar) ;
-            lsnpz:=RefStringAll_Wlpz(lsnpz);
+
+
+            lsnpz:= trim((TListCom as TETSListView).Items[j].SubItems[5]);
+            lsnpz:=stringreplace(lsnpz,'(','',[rfReplaceAll]);
+            lsnpz:=stringreplace(lsnpz,'（','',[rfReplaceAll]);
+            lsnpz:=stringreplace(lsnpz,')','',[rfReplaceAll]);
+            lsnpz:=stringreplace(lsnpz,'）','',[rfReplaceAll]);
+            lsnpz:=stringreplace(lsnpz,'袋装','',[rfReplaceAll]);
+            lsnpz:=stringreplace(lsnpz,'散装','',[rfReplaceAll]);
+            lsnpz:=stringreplace(lsnpz,'贡江PC','贡 ',[rfReplaceAll]) ;
+            lsnpz:=stringreplace(lsnpz,'P.','P',[rfIgnoreCase]) ;
+            while length(lsnpz)<8 do
+              lsnpz:=' '+lsnpz ;
+
+            if length(lsnpz)>8 then
+              lsnpz:=copy(lsnpz,1,8 )  ;
             waitCar:=waitCar+lsnpz  ; // 车牌号+水泥品种
 
             while length(waitCar)<cstlength do
@@ -2769,7 +2988,20 @@ begin
                 if (TListCom as TETSListView ).Items.Count=0 then //表示第一行
                 begin
                 // 第一行 ，装车车牌＋水泥型号  start
-                   lsnpz:=RefStringAll_Wlpz(lsnpz);
+                   lsnpz:=stringreplace(lsnpz,'(','',[rfReplaceAll]);
+                   lsnpz:=stringreplace(lsnpz,'（','',[rfReplaceAll]);
+                   lsnpz:=stringreplace(lsnpz,')','',[rfReplaceAll]);
+                   lsnpz:=stringreplace(lsnpz,'）','',[rfReplaceAll]);
+                   lsnpz:=stringreplace(lsnpz,'袋装','',[rfReplaceAll]);
+                   lsnpz:=stringreplace(lsnpz,'散装','',[rfReplaceAll]);
+                   lsnpz:=stringreplace(lsnpz,'贡江PC','贡 ',[rfReplaceAll]) ;
+                   lsnpz:=stringreplace(lsnpz,'贡江PO','贡 ',[rfReplaceAll]) ;
+                   lsnpz:=stringreplace(lsnpz,'P.','P',[rfIgnoreCase]) ;
+                   while length(lsnpz)<8 do
+                    lsnpz:=' '+lsnpz ;
+
+                   if length(lsnpz)>8 then
+                    lsnpz:=copy(lsnpz,1,8 )  ;
                    waitCar:=waitCar+lsnpz  ; // 车牌号+水泥品种
 
                    while length(waitCar)<cstLength do
@@ -2926,14 +3158,15 @@ begin
   except
     icount:=1 ;
   end;
-  if icount<=1 then
+  if icount=1 then
   begin
     tStartTimer.Enabled :=false ;
     tAutorRefresh.Enabled:=false ;
     tAutorRefresh.Interval:=cstAutoRefresh*60*1000;
+    tAutorRefresh.Tag :=strtoint(cstCurRunlist.Strings[0]);
     tAutorRefresh.Enabled :=true ;
   end
-  else   //如果有多余一条线，那么需要扣除一个循环的
+  else if icount>1 then  //如果有多余一条线，那么需要扣除一个循环的
   begin
     tStartTimer.Enabled:=false ;
     tStartTimer.Interval:=cstAutoRefresh*60*1000-round(cstAutoRefresh*60*1000/icount);
@@ -2942,6 +3175,11 @@ begin
     tAutorRefresh.Enabled:=false ;
     tAutorRefresh.Interval:=round(cstAutoRefresh*60*1000/icount);
    // tAutorRefresh.Enabled :=true ;
+  end
+  else
+  begin
+    tStartTimer.Enabled:=false ;
+    tAutorRefresh.Enabled :=false ;
   end;
 
 
@@ -2962,19 +3200,26 @@ end;
 
 procedure TfrmCalWindows.but1StopClick(Sender: TObject);
 begin
+
   application.ProcessMessages;
+  if not APackLineInfo[0].Sfqybzx then
+    exit ;
   butStopClick(0);
 end;
 
 procedure TfrmCalWindows.but2StopClick(Sender: TObject);
 begin
   application.ProcessMessages;
+  if not APackLineInfo[1].Sfqybzx then
+    exit ;
   butStopClick(1);
 end;
 
 procedure TfrmCalWindows.but3StopClick(Sender: TObject);
 begin
   application.ProcessMessages;
+  if not APackLineInfo[2].Sfqybzx then
+    exit ;
   butStopClick(2);
 end;
 
@@ -3025,6 +3270,7 @@ begin
        dm.BlankBzxWichel(ApackLineNo);
 
        AScreenInfo[ApackLineNo].sfQy:=false ;
+       APackLineInfo[ApackLineNo].Sfqybzx:=false ;
 
        APackLineInfo[ApackLineNo].PackIng:=false ;
 
@@ -3067,8 +3313,6 @@ begin
        sql:='update tsys_PackLineCement sfQy=1 where PackNo='+inttostr(ApackLineNo+1);
        Dm.ADOCnn.Execute(sql) ;
 
-
-
        initTimer ;
     except
 
@@ -3080,18 +3324,24 @@ end;
 procedure TfrmCalWindows.but1StartClick(Sender: TObject);
 begin
   application.ProcessMessages;
+  if APackLineInfo[0].Sfqybzx then
+    exit ;
   butStartClick(0);
 end;
 
 procedure TfrmCalWindows.but2StartClick(Sender: TObject);
 begin
   application.ProcessMessages;
+  if APackLineInfo[1].Sfqybzx then
+    exit ;
   butStartClick(1);
 end;
 
 procedure TfrmCalWindows.but3StartClick(Sender: TObject);
 begin
   application.ProcessMessages;
+  if APackLineInfo[2].Sfqybzx then
+    exit ;  
   butStartClick(2);
 end;
 
@@ -3110,76 +3360,44 @@ begin
   objname:='pl'+inttostr(ApackLineNo+1);
   TplCom:=self.FindComponent(objname);
 
+  sv:=inttostr(ApackLineNo+1)+c_PackLineName ;
   pnlXtcs.Top:=2;
   pnlXtcs.Left :=(TplCom as TPanel).Left+2 ;
   pnlXtcs.Visible :=true ;
   butbxzOK.Tag:=ApackLineNo+1 ;//Tag 用来表示包装线
- {
-  exit ;
 
-  if application.MessageBox(pchar('确定要启用'+inttostr(ApackLineNo+1)+'号线吗？'),'确定启用！',MB_OKCANCEL+MB_ICONWARNING+MB_DEFBUTTON2)<>IDOK then
-    exit ;
-
-  sv:=trim(InputBox('密码输入','请输入启用'+inttostr(ApackLineNo+1)+'号线密码','')) ;
-  if sv<>'123' then
-    exit ;
-
-  try
-    initPackLine(false,ApackLineNo+1) ;
-    InitScreenInfo(false,ApackLineNo+1) ;
-    AutoRefreshNum[ApackLineNo]:=0 ;
-    ladeID[ApackLineNo]:='0' ;
-
-    //需要重新刷新继电器 吸合状态,防止启动前道口改变  start
-    if (APackLineInfo[ApackLineNo].Qydk=cstQydk1) or (APackLineInfo[ApackLineNo].Qydk=cstQydk12) then
-      j:=0
-    else
-      j:=1 ;
-
-    PackLine_Jsq_XhSf(ApackLineNo,j) ;
-    PackLine_Jsq_XhSf(ApackLineNo,j) ;
-    JsqStatus[ApackLineNo]:=0;
-    JsqClear(ApackLineNo);
-    JsqClear(ApackLineNo);
-    JsqClear(ApackLineNo);
-  //  sleep(100) ;
-    JsqLjClear(APackLineNo) ;
-    JsqLjClear(APackLineNo) ;
-    JsqLjClear(APackLineNo) ;
-  //  sleep(100);
-
-    CloseZadao(ApackLineNo);
-    CloseZadao(ApackLineNo);
-    CloseZadao(ApackLineNo);
-    ClearJsqAlarm(ApackLineNo);
-    ClearJsqAlarm(ApackLineNo);
-
-    //初始化屏幕
-
-      LedInitFlag[ApackLineNo]:=0;
-      if  AScreenInfo[ApackLineNo].sfQy then
-      begin
-        initScreenT:= TInitScreenThread.Create(ApackLineNo+1);
-        initScreenT.Resume;
-      end ;
-
-     objname:='pl'+inttostr(ApackLineNo+1);
-     TplCom:=self.FindComponent(objname);
-     (TplCom as TPanel).Color:=$0079FF79 ;
-
-     inifile:=Tinifile.Create(extractfilepath(application.ExeName) + c_filename);
-     try
-        inifile.WriteBool(inttostr(ApackLineNo+1)+c_PackLineName,'bzx_ckb_sfqy',true) ;
-        cstCurRunlist.Add(inttostr(ApackLineNo+1)) ;
-        cstCurRunlist.Sort;
-     finally
-        inifile.Free ;
-     end;
-     initTimer ;
-  except
+  cb_jsq_ckxz.Items.Clear ;
+  cb_jsq_ckxz.Values.Clear ;
+  pmj_cb_ckxz.Items.Clear ;
+  pmj_cb_ckxz.Values.Clear ;
+  for i:=0 to ((cstUsePkgLine+1)*4)  do
+  begin
+    cb_jsq_ckxz.Items.Add('COM'+inttostr(i+1))  ;
+    cb_jsq_ckxz.Values.Add(inttostr(i)) ;
+    pmj_cb_ckxz.Items.Add('COM'+inttostr(i+1)) ;
+    pmj_cb_ckxz.Values.Add(inttostr(i)) ;
 
   end ;
-     }
+  inifile:=Tinifile.Create(extractfilepath(application.ExeName) + c_filename );
+  try
+
+    cb_pz_pzxz.Text  :=inifile.ReadString(sv,'cb_pz_pzxz','P.C32.5');
+    cb_jsq_ckxz.Value :=inifile.ReadString(sv,'cb_jsq_ckxz',inttostr(ApackLineNo*4+1));
+    bzx_sedt_zdybdjg.Value :=inifile.ReadInteger(sv,'bzx_sedt_zdybdjg',30);
+    bzx_cb_qydk.Value :=inifile.ReadString(sv,'bzx_cb_qydk','1#2#');
+    pmj_cb_ckxz.Value :=inifile.ReadString(sv,'pmj_cb_ckxz',inttostr(ApackLineNo*4+2));
+    pmj_edt_ccqh.Text :=inifile.ReadString(sv,'pmj_edt_ccqh',inttostr(ApackLineNo+1));
+
+    pmj_ccqnrS.Text:=inifile.ReadString(sv,'pmj_ccqnrS','');
+    pmj_Code.Value:=inifile.ReadString(sv,'pmj_Code','0');
+    pmj_ccqnrE.Text:=inifile.ReadString(sv,'pmj_ccqnrE','');
+    pmjSfqy.Checked:=inifile.ReadBool(sv,'pmjSfqy',true);
+
+  finally
+    inifile.Free;
+  end;
+
+ 
 end;
 
 //累计清0
@@ -3379,13 +3597,26 @@ begin
 
                   if (TListCom as TETSListView ).Items.Count=0 then //表示第一行
                   begin
-                     lsnpz:=RefStringAll_Wlpz(lsnpz);
+                     lsnpz:=stringreplace(lsnpz,'(','',[rfReplaceAll]);
+                     lsnpz:=stringreplace(lsnpz,'（','',[rfReplaceAll]);
+                     lsnpz:=stringreplace(lsnpz,')','',[rfReplaceAll]);
+                     lsnpz:=stringreplace(lsnpz,'）','',[rfReplaceAll]);
+                     lsnpz:=stringreplace(lsnpz,'袋装','',[rfReplaceAll]);
+                     lsnpz:=stringreplace(lsnpz,'散装','',[rfReplaceAll]);
+                     lsnpz:=stringreplace(lsnpz,'贡江PC','贡 ',[rfReplaceAll]) ;
+                     lsnpz:=stringreplace(lsnpz,'贡江PO','贡 ',[rfReplaceAll]) ;
+                     lsnpz:=stringreplace(lsnpz,'P.','P',[rfIgnoreCase]) ;
+                     while length(lsnpz)<8 do
+                      lsnpz:=' '+lsnpz ;
+
+                     if length(lsnpz)>8 then
+                      lsnpz:=copy(lsnpz,1,8 )  ;
                      waitCar:=waitCar+lsnpz  ; // 车牌号+水泥品种
 
                      while length(waitCar)<cstLength do
                         waitCar:=waitCar+' ' ;
-                     AScreenInfo[i].Pm_PdCar.Delete(0);
-                     AScreenInfo[i].Pm_PdCar.Insert(0,waitCar);
+                     AScreenInfo[iPNO].Pm_PdCar.Delete(0);
+                     AScreenInfo[iPNO].Pm_PdCar.Insert(0,waitCar);
                   // 第一行 ，装车车牌＋水泥型号  end
 
                      while length(sNum)<4 do
@@ -3393,7 +3624,7 @@ begin
                       sValue:=inttostr(dkValue )+'#刷卡  '+'待装'+sNum ;
                       waitCar:=sValue ;
 
-                     tDelever[i].Enabled :=true ;
+                     tDelever[iPNO].Enabled :=true ;
                   end
                   else if (TListCom as TETSListView ).Items.Count=1 then //已经有一行了
                   begin
@@ -3509,6 +3740,7 @@ begin
   iTag:= (sender as TTimer).Tag ;   //包装线 ,Tag从0开始的
   iPackNo:=iTag ;    //获取当前的包装线 ,0表示1号线
   tDelever[iPackNo].Enabled :=false ;
+ // (sender as TTimer).Enabled :=false ;
   try
       objName :='plist'+inttostr(iTag+1) ;
       TListCom:=self.FindComponent(objName) ;
@@ -3519,7 +3751,7 @@ begin
    //延时刷卡，需要把车辆重新还原，再分配一辆 2013-12-21 
       ssql:=' begin tran '+
             ' insert into cux_9_om_wx_ship_v '+
-            ' select shipment_number,schedule_qty,schedule_count,bill_date, '+
+            ' select shipment_number,schedule_qty,schedule_count,getdate() bill_date, '+
             ' customer_number,customer_name,item_no,item_name, '+
             ' status,card_no,tool_number,address,lot_number,0,0,0 '+
             ' from pm_data '+
@@ -3534,6 +3766,7 @@ begin
       (TlistCom as TETSListView).Items.Delete(0);
       AScreenInfo[iPackNo].Pm_PdCar.delete(1) ;
       AScreenInfo[iPackNo].AutoNum := AScreenInfo[iPackNo].AutoNum-1 ;
+      APackLineInfo[iPackNo].WaitVehicleNum:=APackLineInfo[iPackNo].WaitVehicleNum-1 ;
 
       objname :='dk'+inttostr(iTag+1) ;
       TdkCom :=self.FindComponent(objname) ;
@@ -3673,6 +3906,11 @@ begin
                   (TSnpzCom as TRzEdit).Text :=trim((TListCom as TETSListView).Items[0].SubItems[5]);
                   (TCardCom as TRzEdit).Text :=trim((TListCom as TETSListView).Items[0].SubItems[1]);
                   (TfpbhCom as TRzEdit).Text :=trim((TListCom as TETSListView).Items[0].SubItems[7]);
+                  { 0 无
+                    1 批号
+                    2 运至地代码
+                    3 批号+运至地代码
+                    4 运至地代码+批号}
                   if (APackLineInfo[iPackNo-1].pmjsfqy) and (APackLineInfo[iPackNo-1].ccqnrCode='1') then
                     (TpmjpmnrCom as TRzEdit).Text :=trim((TListCom as TETSListView).Items[0].SubItems[4])
                   else if (APackLineInfo[iPackNo-1].pmjsfqy) and (APackLineInfo[iPackNo-1].ccqnrCode='2') then
@@ -3687,7 +3925,20 @@ begin
 
                 //   sCarLedUp:=sCarNo+'  '+'装车中 '; //刷卡成功， 显示 "已装0000待装9999"  2013-12-14
                     lsnpz:=trim((TListCom as TETSListView).Items[0].SubItems[5]) ;//水泥品种
-                    lsnpz:=RefStringAll_Wlpz(lsnpz);
+                    lsnpz:=stringreplace(lsnpz,'(','',[rfReplaceAll]);
+                    lsnpz:=stringreplace(lsnpz,'（','',[rfReplaceAll]);
+                    lsnpz:=stringreplace(lsnpz,')','',[rfReplaceAll]);
+                    lsnpz:=stringreplace(lsnpz,'）','',[rfReplaceAll]);
+                    lsnpz:=stringreplace(lsnpz,'袋装','',[rfReplaceAll]);
+                    lsnpz:=stringreplace(lsnpz,'散装','',[rfReplaceAll]);
+                    lsnpz:=stringreplace(lsnpz,'贡江PC','贡 ',[rfReplaceAll]) ;
+                    lsnpz:=stringreplace(lsnpz,'贡江PO','贡 ',[rfReplaceAll]) ;
+                    lsnpz:=stringreplace(lsnpz,'P.','P',[rfIgnoreCase]) ;
+                    while length(lsnpz)<8 do
+                      lsnpz:=' '+lsnpz ;
+
+                    if length(lsnpz)>8 then
+                      lsnpz:=copy(lsnpz,1,8 )  ;
                     lsnpz:=sCarNo+lsnpz  ; // 车牌号+水泥品种
 
                     while length(lsnpz)<cstlength do
@@ -3926,6 +4177,124 @@ begin
 end;
 
  
+
+procedure TfrmCalWindows.butBb1Click(Sender: TObject);
+begin
+//包装线1补包
+  if (ApackLineInfo[0].Sfqybzx) and (bbNum1.IntValue<>0) and (Num1.IntValue<>0) then
+  begin
+     sendModifyPacket(0,Num1.IntValue,bbNum1.IntValue );
+     Num1.IntValue:=Num1.IntValue+bbNum1.IntValue ;
+    // Num1.Tag:=bbNum1.IntValue;
+  end;
+end;
+
+procedure TfrmCalWindows.butBb2Click(Sender: TObject);
+begin
+//包装线2补包
+  if (ApackLineInfo[1].Sfqybzx) and (bbNum2.IntValue<>0) and (Num2.IntValue<>0) then
+  begin
+     sendModifyPacket(1,Num2.IntValue,bbNum2.IntValue );
+     Num2.IntValue:=Num2.IntValue+bbNum2.IntValue ;
+    // Num2.Tag:=bbNum2.IntValue;
+  end;
+end;
+
+procedure TfrmCalWindows.butBb3Click(Sender: TObject);
+begin
+//包装线3补包
+  if (ApackLineInfo[2].Sfqybzx) and (bbNum3.IntValue<>0) and (Num3.IntValue<>0) then
+  begin
+     sendModifyPacket(2,Num3.IntValue,bbNum3.IntValue );
+     Num3.IntValue:=Num3.IntValue+bbNum3.IntValue ;
+    // Num3.Tag:=bbNum3.IntValue;
+  end;
+end;
+
+ //下发补包数量
+procedure TfrmCalWindows.sendModifyPacket(APackNum, srcNum,ModifyNum: integer);
+var
+  objname: string ;
+  TmemoCom : TComponent ;
+begin
+
+ try
+   objname:='Memo'+inttostr(APackNum+1) ;
+   TmemoCom :=self.FindComponent(objname) ;
+   sleep(200) ;
+   SendJsqInfo(APackNum,APackNum+1,srcNum+ModifyNum,0 ); //包装线，通道号 ,发送数量
+   sleep(200) ;
+   SendJsqInfo(APackNum,APackNum+1,srcNum+ModifyNum,0 );
+   sleep(600) ;
+   SendJsqInfo(APackNum,APackNum+1,srcNum+ModifyNum,0 );
+   (TmemoCom as TMemo).Lines.Add('补包数量:'+inttostr(ModifyNum) ) ;
+ except
+   (TmemoCom as TMemo).Lines.Add('补包错误') ;
+ end;
+ 
+end;
+
+procedure TfrmCalWindows.readiniSnph(APackLine: integer);
+var
+  ini : tinifile ;
+  cs : string ;
+begin
+  ini:=Tinifile.Create(extractfilepath(application.ExeName) + c_filename );
+  try
+    cs:=inttostr(APackLine+1)+ c_PackLineName ;
+
+    APackLineInfo[APackLine].SnPh:=ini.ReadString(cs,'edtSnph','');
+    APackLineInfo[APackLine].Snph_Num:=ini.ReadInteger(cs,'edtSnph_Num',2300);
+    if ini.ReadInteger(cs,'Snph_ShengNum',0) =0 then
+       APackLineInfo[APackLine].Snph_ShengNum:=ini.ReadInteger(cs,'edtSnph_Num',2300)
+    else
+       APackLineInfo[APackLine].Snph_ShengNum:=ini.ReadInteger(cs,'Snph_ShengNum',0);
+
+  finally
+    ini.Free;
+  end;
+
+end;
+
+//更新批号 ,不用更新Snph_ShengNum ,这个是该批次装余的数量
+procedure TfrmCalWindows.butPh1Click(Sender: TObject);
+begin
+  saveiniSbph(0,trim(edtSnph1.Text ),edtSnph_Num1.IntValue,0) ;
+end;
+
+procedure TfrmCalWindows.butPh2Click(Sender: TObject);
+begin
+  saveiniSbph(1,trim(edtSnph2.Text ),edtSnph_Num2.IntValue,0) ;
+end;
+
+procedure TfrmCalWindows.butPh3Click(Sender: TObject);
+begin
+  saveiniSbph(2,trim(edtSnph3.Text ),edtSnph_Num3.IntValue,0) ;
+end;
+
+procedure TfrmCalWindows.saveiniSbph(APackLine : integer;ASnph:string;ASnphNum,AType: integer);
+var
+  ini : tinifile ;
+  cs : string ;
+begin
+  ini:=Tinifile.Create(extractfilepath(application.ExeName) + c_filename );
+  try
+
+    cs:=inttostr(APackLine+1)+ c_PackLineName ;
+    if AType=0 then  //表示设置保存
+    begin
+      ini.WriteString(cs,'edtSnph',ASnph);
+      ini.WriteInteger(cs,'edtSnph_Num',ASnphNum);
+    end
+    else if AType=1 then  //表示装完保存
+      ini.WriteInteger(cs,'Snph_ShengNum',ASnphNum);
+  finally
+    ini.Free;
+  end;
+
+end;
+
+
 
 end.
 

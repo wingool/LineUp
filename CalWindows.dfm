@@ -1,6 +1,6 @@
 object frmCalWindows: TfrmCalWindows
-  Left = 135
-  Top = 126
+  Left = 108
+  Top = 172
   Width = 1032
   Height = 746
   Caption = #27969#27700#32447#20135#21697#35745#25968#31995#32479
@@ -22,7 +22,7 @@ object frmCalWindows: TfrmCalWindows
     Left = 0
     Top = 0
     Width = 335
-    Height = 719
+    Height = 712
     Align = alLeft
     Color = 8447623
     TabOrder = 0
@@ -189,7 +189,7 @@ object frmCalWindows: TfrmCalWindows
       object Label2: TLabel
         Left = 16
         Top = 24
-        Width = 29
+        Width = 31
         Height = 39
         Caption = #24050#35013#25968#37327'('#21253') '
         Font.Charset = DEFAULT_CHARSET
@@ -760,7 +760,7 @@ object frmCalWindows: TfrmCalWindows
       object Label9: TLabel
         Left = 16
         Top = 24
-        Width = 29
+        Width = 31
         Height = 39
         Caption = #24050#35013#25968#37327'('#21253') '
         Font.Charset = DEFAULT_CHARSET
@@ -1339,7 +1339,7 @@ object frmCalWindows: TfrmCalWindows
       object Label22: TLabel
         Left = 16
         Top = 24
-        Width = 29
+        Width = 31
         Height = 39
         Caption = #24050#35013#25968#37327'('#21253') '
         Font.Charset = DEFAULT_CHARSET

@@ -87,10 +87,7 @@ type
   function getChanelOX(chNo: integer): integer ; //获取16进制通道号
   function DataCheckJy(data: array of byte ;len: integer): integer ;
   function ReplaceContentInFile(AFilename: string ;AQuantity: integer ): boolean;
-  //车牌号码处理
   function RefStringAll_Car(srcStr :string): string ;
-  //物料品种处理
-  function RefStringAll_Wlpz(srcStr :string): string ;
 
  // function IIF(srcS,src1,)
 
@@ -1037,6 +1034,7 @@ begin
   cstAutoRefresh:=inifile.ReadInteger('Sys_Param','AutoRefresh',0) ; //0不启用 ，1-30分钟
   cstStartAutoRefeshNum:=inifile.ReadInteger('Sys_Param','AutoRefresh',50) ;//要启用自动刷新必须是当前包装中大于才启动
   cstTimerNum:=inifile.ReadInteger('Sys_Param','cstTimerNum',3) ;//启用几个定时器后如果不来刷卡，把当前车排在最后
+  cstCanModifyPacket:=inifile.readbool('Sys_Param','cstCanModifyPacket',false) ; //是否允许补包
   if cstTimerNum<=0 then
      cstTimerNum:=3;
   if cstStartAutoRefeshNum<40 then
@@ -1562,23 +1560,7 @@ begin
   result:=s ;
 end;
 
-function RefStringAll_Wlpz(srcStr :string): string ;
-var
-  lsnpz : string ;
-begin
-  lsnpz:=stringreplace(srcStr,'(','',[rfReplaceAll]);
-  lsnpz:=stringreplace(lsnpz,'（','',[rfReplaceAll]);
-  lsnpz:=stringreplace(lsnpz,')','',[rfReplaceAll]);
-  lsnpz:=stringreplace(lsnpz,'）','',[rfReplaceAll]);
-  lsnpz:=stringreplace(lsnpz,'袋装','',[rfReplaceAll]);
-  lsnpz:=stringreplace(lsnpz,'散装','',[rfReplaceAll]);
-  lsnpz:=stringreplace(lsnpz,'贡江PC','贡 ',[rfReplaceAll]) ;
-  lsnpz:=stringreplace(lsnpz,'贡江PO','贡 ',[rfReplaceAll]) ;
-  lsnpz:=stringreplace(lsnpz,'P.','P',[rfIgnoreCase]) ;
-  while length(lsnpz)<8 do
-    lsnpz:=' '+lsnpz ;
-  if length(lsnpz)>8 then
-    lsnpz:=copy(lsnpz,1,8 )  ;
-end;
+
+
 
 end.

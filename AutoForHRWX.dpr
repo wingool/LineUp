@@ -28,5 +28,6 @@ begin
         SetLocaleInfoa(LOCALE_SYSTEM_DEFAULT, LOCALE_STIMEFORMAT, PChar(str));
   Application.CreateForm(TDM, DM);
   Application.CreateForm(TfrmMain, frmMain);
+
   Application.Run;
 end.

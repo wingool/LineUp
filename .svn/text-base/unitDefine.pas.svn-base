@@ -52,6 +52,9 @@ type
     totalNum : integer ;  //累计多少辆车(做为序号使用)
     PackIng : boolean ;//是否正在装车
     RefreshIng : boolean ;//是否正在刷新数据
+    SnPh:string ;//水泥批号
+    Snph_Num: integer ;//该批次水泥批号数量
+    Snph_ShengNum: integer ;//该批次水泥还余多少量(从总量开始往下减)
   end;
   TPackLinePoint=^PackLineType;
 
@@ -114,6 +117,7 @@ var
   //快捷键信息
   cstshortcut:array[1..14] of integer;
   cstCurRunlist: TStringList ; //运行的包装线编号列表,包装线从1号开始计数
+  cstCanModifyPacket: boolean ;//是否允许补包
 
   //查询配置信息
   cstQueryRecordcount:integer;//查询返回的记录数

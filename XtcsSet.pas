@@ -80,6 +80,14 @@ type
     Label34: TLabel;
     Label4: TLabel;
     dkq_cssksj: TRzNumericEdit;
+    Label2: TLabel;
+    edtSnph: TRzEdit;
+    edtSnph_Num: TRzNumericEdit;
+    Label5: TLabel;
+    edtShengNum: TRzNumericEdit;
+    Label6: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
     procedure btnCloseClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
@@ -230,6 +238,10 @@ begin
     pmj_cb_ckxz.Value :=inifile.ReadString(cs_PackName,'pmj_cb_ckxz',inttostr(iTag*4+2));
     pmj_edt_ccqh.Text :=inifile.ReadString(cs_PackName,'pmj_edt_ccqh',inttostr(iTag));
 
+    edtSnph.Text:=inifile.ReadString(cs_PackName,'edtSnph','');
+    edtSnph_Num.IntValue:=inifile.ReadInteger(cs_PackName,'edtSnph_Num',2300);
+    edtShengNum.IntValue :=inifile.ReadInteger(cs_PackName,'Snph_ShengNum',2300);
+
     pmj_ccqnrS.Text:=inifile.ReadString(cs_PackName,'pmj_ccqnrS','');
     pmj_Code.Value:=inifile.ReadString(cs_PackName,'pmj_Code','0');
     pmj_ccqnrE.Text:=inifile.ReadString(cs_PackName,'pmj_ccqnrE','');
@@ -330,6 +342,13 @@ begin
       WriteBool(cs_PackName,'bzx_ckb_sfqy',bzx_ckb_sfqy.Checked);
       WriteInteger(cs_PackName,'bzx_sedt_zdybdjg',strtoint(floattostr(bzx_sedt_zdybdjg.Value)));
       WriteString(cs_PackName,'bzx_cb_qydk',bzx_cb_qydk.Value);
+      WriteString(cs_PackName,'edtSnph',trim(edtSnph.Text) );
+      WriteInteger(cs_PackName,'edtSnph_Num',edtSnph_Num.IntValue );
+      if edtShengNum.intValue=0 then
+         WriteInteger(cs_PackName,'Snph_ShengNum',edtSnph_Num.IntValue )
+      else
+         WriteInteger(cs_PackName,'Snph_ShengNum',edtShengNum.IntValue );
+
       WriteString(cs_PackName,'pmj_cb_ckxz',pmj_cb_ckxz.Value);
       WriteString(cs_PackName,'pmj_edt_ccqh',trim(pmj_edt_ccqh.Text));
       WriteBool(cs_packname,'pmjSfqy',pmjsfqy.Checked );

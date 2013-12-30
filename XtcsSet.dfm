@@ -1,6 +1,6 @@
 object frmXtcsSet: TfrmXtcsSet
-  Left = 383
-  Top = 217
+  Left = 185
+  Top = 119
   Width = 698
   Height = 631
   BorderIcons = [biSystemMenu]
@@ -257,7 +257,7 @@ object frmXtcsSet: TfrmXtcsSet
           object gb_pzxz: TGroupBox
             Left = 24
             Top = 0
-            Width = 426
+            Width = 480
             Height = 51
             Caption = #21697#31181#36873#25321
             Color = clBtnFace
@@ -270,7 +270,7 @@ object frmXtcsSet: TfrmXtcsSet
             ParentFont = False
             TabOrder = 0
             object ckb_qz_qypzxz: TRzCheckBox
-              Left = 320
+              Left = 104
               Top = 24
               Width = 97
               Height = 17
@@ -282,7 +282,7 @@ object frmXtcsSet: TfrmXtcsSet
               Visible = False
             end
             object cb_pz_pzxz: TRzComboBox
-              Left = 56
+              Left = 48
               Top = 20
               Width = 201
               Height = 21
@@ -302,7 +302,7 @@ object frmXtcsSet: TfrmXtcsSet
           object gb_pmjpz: TGroupBox
             Left = 24
             Top = 116
-            Width = 427
+            Width = 480
             Height = 100
             Caption = #21943#30721#26426#37197#32622
             TabOrder = 0
@@ -362,19 +362,21 @@ object frmXtcsSet: TfrmXtcsSet
               Height = 21
               ItemHeight = 13
               TabOrder = 3
-              Text = #23458#25143#20195#30721
+              Text = #25209#21495'+'#36816#33267#22320#20195#30721
               OnChange = ContentChange
               Items.Strings = (
                 #26080
-                #23458#25143#20195#30721
-                #27700#27877#32534#21495
-                #23458#25143#20195#30721'+'#27700#27877#32534#21495)
-              ItemIndex = 1
+                #25209#21495
+                #36816#33267#22320#20195#30721
+                #25209#21495'+'#36816#33267#22320#20195#30721
+                #36816#33267#22320#20195#30721'+'#25209#21495)
+              ItemIndex = 3
               Values.Strings = (
                 '0'
                 '1'
                 '2'
-                '3')
+                '3'
+                '4')
             end
             object pmj_ccqnrE: TRzEdit
               Left = 291
@@ -397,20 +399,20 @@ object frmXtcsSet: TfrmXtcsSet
           object gb_bzxcs: TGroupBox
             Left = 24
             Top = 0
-            Width = 427
+            Width = 480
             Height = 113
             Caption = #21253#35013#32447#21442#25968
             TabOrder = 1
             object pnl_bzxcs: TPanel
               Left = 2
               Top = 26
-              Width = 423
+              Width = 476
               Height = 85
               Align = alBottom
               BevelOuter = bvNone
               TabOrder = 0
               object Label16: TLabel
-                Left = 45
+                Left = 13
                 Top = 9
                 Width = 155
                 Height = 15
@@ -418,7 +420,7 @@ object frmXtcsSet: TfrmXtcsSet
                 Caption = #21277#36947#19982#25203#36947#26102#38388#38388#38548'('#31186')'
               end
               object Label17: TLabel
-                Left = 137
+                Left = 105
                 Top = 37
                 Width = 59
                 Height = 15
@@ -426,16 +428,56 @@ object frmXtcsSet: TfrmXtcsSet
                 Caption = #21551#29992#36947#21475
               end
               object Label7: TLabel
-                Left = 97
+                Left = 65
                 Top = 64
                 Width = 100
                 Height = 13
                 AutoSize = False
                 Caption = #35745#25968#22120#20018#21475#36873#25321
               end
+              object Label2: TLabel
+                Left = 310
+                Top = 11
+                Width = 57
+                Height = 13
+                AutoSize = False
+                Caption = #27700#27877#25209#21495' '
+              end
+              object Label5: TLabel
+                Left = 311
+                Top = 36
+                Width = 59
+                Height = 13
+                AutoSize = False
+                Caption = #25209#21495#25968#37327' '
+              end
+              object Label6: TLabel
+                Left = 311
+                Top = 62
+                Width = 59
+                Height = 13
+                AutoSize = False
+                Caption = #20313#19979#25968#37327' '
+              end
+              object Label8: TLabel
+                Left = 455
+                Top = 36
+                Width = 15
+                Height = 13
+                AutoSize = False
+                Caption = #21253' '
+              end
+              object Label9: TLabel
+                Left = 456
+                Top = 62
+                Width = 15
+                Height = 13
+                AutoSize = False
+                Caption = #21253' '
+              end
               object bzx_sedt_zdybdjg: TRzSpinEdit
                 Tag = 2
-                Left = 201
+                Left = 169
                 Top = 7
                 Width = 89
                 Height = 21
@@ -446,9 +488,9 @@ object frmXtcsSet: TfrmXtcsSet
                 OnChange = ContentChange
               end
               object bzx_cb_qydk: TRzComboBox
-                Left = 201
+                Left = 169
                 Top = 33
-                Width = 145
+                Width = 121
                 Height = 21
                 ItemHeight = 13
                 TabOrder = 1
@@ -465,13 +507,39 @@ object frmXtcsSet: TfrmXtcsSet
                   '1#2#')
               end
               object cb_jsq_ckxz: TRzComboBox
-                Left = 201
+                Left = 169
                 Top = 60
-                Width = 145
+                Width = 120
                 Height = 21
                 ItemHeight = 13
                 TabOrder = 2
                 OnChange = ContentChange
+              end
+              object edtSnph: TRzEdit
+                Left = 371
+                Top = 7
+                Width = 101
+                Height = 21
+                TabOrder = 3
+                OnChange = ContentChange
+              end
+              object edtSnph_Num: TRzNumericEdit
+                Left = 371
+                Top = 33
+                Width = 81
+                Height = 21
+                TabOrder = 4
+                OnChange = ContentChange
+                DisplayFormat = ',0;(,0)'
+              end
+              object edtShengNum: TRzNumericEdit
+                Left = 371
+                Top = 59
+                Width = 81
+                Height = 21
+                TabOrder = 5
+                OnChange = ContentChange
+                DisplayFormat = ',0;(,0)'
               end
             end
             object bzx_ckb_sfqy: TRzCheckBox
