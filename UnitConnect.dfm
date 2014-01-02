@@ -1,9 +1,9 @@
 object frmConnect: TfrmConnect
-  Left = 473
-  Top = 346
+  Left = 392
+  Top = 285
   Cursor = crHourGlass
   BorderStyle = bsNone
-  Caption = #26381#21153#22120#36830#25509
+  Caption = '服务器连接'
   ClientHeight = 48
   ClientWidth = 238
   Color = 10856811
@@ -24,12 +24,12 @@ object frmConnect: TfrmConnect
     Width = 177
     Height = 17
     AutoSize = False
-    Caption = #27491#22312#36830#25509#25968#25454#24211','#35831#31245#20505'......'
+    Caption = '正在连接数据库,请稍候......'
     Color = 10856811
     Font.Charset = ANSI_CHARSET
     Font.Color = clWhite
     Font.Height = -12
-    Font.Name = #23435#20307
+    Font.Name = '宋体'
     Font.Style = []
     ParentColor = False
     ParentFont = False
@@ -55,6 +55,7 @@ object frmConnect: TfrmConnect
     Top = 3
     Width = 41
     Height = 41
+    Active = False
     Repetitions = 4000
     StopFrame = 8
   end
@@ -63,7 +64,7 @@ object frmConnect: TfrmConnect
     Top = 0
     Width = 57
     Height = 17
-    ImeName = #20013#25991' ('#31616#20307') - '#24494#36719#25340#38899
+    ImeName = '中文 (简体) - 微软拼音'
     ItemHeight = 13
     TabOrder = 1
     Visible = False

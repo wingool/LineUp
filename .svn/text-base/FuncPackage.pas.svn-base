@@ -88,7 +88,9 @@ type
   function DataCheckJy(data: array of byte ;len: integer): integer ;
   function ReplaceContentInFile(AFilename: string ;AQuantity: integer ): boolean;
   function RefStringAll_Car(srcStr :string): string ;
-
+  function RefStringAll_Snpz(srcStr: string): string ;
+  function buildPmContent(Asnpz,ACustomCode,ACph,APhNo: string ): string ;
+  function getHhLen(CarStr: string ): integer;
  // function IIF(srcS,src1,)
 
 implementation
@@ -1035,6 +1037,7 @@ begin
   cstStartAutoRefeshNum:=inifile.ReadInteger('Sys_Param','AutoRefresh',50) ;//要启用自动刷新必须是当前包装中大于才启动
   cstTimerNum:=inifile.ReadInteger('Sys_Param','cstTimerNum',3) ;//启用几个定时器后如果不来刷卡，把当前车排在最后
   cstCanModifyPacket:=inifile.readbool('Sys_Param','cstCanModifyPacket',false) ; //是否允许补包
+
   if cstTimerNum<=0 then
      cstTimerNum:=3;
   if cstStartAutoRefeshNum<40 then
@@ -1555,12 +1558,71 @@ var
 begin
   s:= stringreplace(srcStr,'-','',[rfReplaceAll]) ;
   s:= stringreplace(s,'.','',[rfReplaceAll]) ;
-  while  length(s)<8 do
+  while  length(s)<8 do     //如果小于8则补空
     s:=s+' ' ;
   result:=s ;
 end;
 
+function RefStringAll_Snpz(srcStr :string): string ;
+var
+  s : string ;
+begin
+  s:=srcStr ;//水泥品种
+ { s:=stringreplace(s,'(','',[rfReplaceAll]);
+  s:=stringreplace(s,'（','',[rfReplaceAll]);
+  s:=stringreplace(s,')','',[rfReplaceAll]);
+  s:=stringreplace(s,'）','',[rfReplaceAll]);
+  s:=stringreplace(s,'袋装','',[rfReplaceAll]);
+  s:=stringreplace(s,'散装','',[rfReplaceAll]);
+  s:=stringreplace(s,'贡江PC','贡 ',[rfReplaceAll]) ;
+  s:=stringreplace(s,'贡江PO','贡 ',[rfReplaceAll]) ;
+  s:=stringreplace(s,'P.','P',[rfIgnoreCase]) ;
+  }
+  if pos('P·C_32.5R_',s )>0 then
+     s:='PC32.5R'
+  else if pos('P·O_42.5_',s )>0 then
+     s:='PO42.5'
+  else if pos('P·C_32.5_',s )>0 then
+     s:='PC32.5' ;
+  s:=stringreplace(s,'.','',[rfIgnoreCase]) ;
+  result:=s ;
 
+end;
 
+function buildPmContent(Asnpz,ACustomCode,ACph,APhNo: string ): string ;
+var
+   yyy,mm,dd : word ;
+   syyy,smm,sdd,ssnpz,sCph,sNo: string ;
+begin
+   decodedate(now,yyy,mm,dd);
+   syyy:=inttostr(yyy);
+   smm:=inttostr(mm);
+   sdd:=inttostr(dd);
+   if length(syyy)=4 then
+     syyy:=copy(syyy,3,2);
+   if length(smm)>2 then
+     smm:='0'+smm ;
+   ssnpz:=uppercase(Asnpz) ;
+   ssnpz:=RefStringAll_Snpz(ssnpz);
+   if ssnpz='PC32.5R' then
+     ssnpz:='FRD'
+   else if ssnpz='PO42.5' then
+     ssnpz:='PO'
+   else if ssnpz='PC32.5' then
+     ssnpz:='FD';
+   sCph:=trim(copy(ACph,length(ACph)-3,4)) ;
+
+   //原先是  13FRD12258 只有 最后的258需要输入
+   //result:=syyy+ssnpz+smm+APhNo+' '+ACustomCode+' '+sCph  ;
+   //现在是 整个就是输入的批号
+   result:=APhNo+' '+ACustomCode+' '+sCph  ;
+end;
+
+//根据车牌的长度决定 货号可以显示的长度
+function getHhLen(CarStr: string ): integer;
+begin
+  //16是液晶屏一行显示的字符串最长长度
+  result := 16-Length(CarStr);
+end;
 
 end.

@@ -1,6 +1,6 @@
 object frmCalWindows: TfrmCalWindows
-  Left = 108
-  Top = 172
+  Left = 169
+  Top = 142
   Width = 1032
   Height = 746
   Caption = #27969#27700#32447#20135#21697#35745#25968#31995#32479
@@ -22,8 +22,7 @@ object frmCalWindows: TfrmCalWindows
     Left = 0
     Top = 0
     Width = 335
-    Height = 712
-    Align = alLeft
+    Height = 708
     Color = 8447623
     TabOrder = 0
     object Panel4: TPanel
@@ -111,7 +110,7 @@ object frmCalWindows: TfrmCalWindows
       Left = 4
       Top = 76
       Width = 327
-      Height = 55
+      Height = 46
       Caption = #35745#25968#22120
       TabOrder = 2
       object tx1: TTorryButton
@@ -147,8 +146,8 @@ object frmCalWindows: TfrmCalWindows
         color = clLime
       end
       object Panel6: TPanel
-        Left = 35
-        Top = 17
+        Left = 53
+        Top = 13
         Width = 57
         Height = 25
         Caption = #36890#35759
@@ -162,9 +161,9 @@ object frmCalWindows: TfrmCalWindows
         TabOrder = 0
       end
       object jsqck1: TRzEdit
-        Left = 99
-        Top = 17
-        Width = 153
+        Left = 120
+        Top = 13
+        Width = 134
         Height = 26
         Color = clInfoBk
         Ctl3D = False
@@ -182,9 +181,9 @@ object frmCalWindows: TfrmCalWindows
     end
     object RzGroupBox2: TRzGroupBox
       Left = 4
-      Top = 132
+      Top = 123
       Width = 327
-      Height = 74
+      Height = 83
       TabOrder = 3
       object Label2: TLabel
         Left = 16
@@ -201,9 +200,9 @@ object frmCalWindows: TfrmCalWindows
         WordWrap = True
       end
       object ybzsl1: TRzEdit
-        Left = 64
-        Top = 7
-        Width = 213
+        Left = 55
+        Top = 11
+        Width = 169
         Height = 66
         Text = '0'
         Color = clNone
@@ -215,11 +214,53 @@ object frmCalWindows: TfrmCalWindows
         ParentFont = False
         TabOrder = 0
       end
+      object pnlBB1: TPanel
+        Left = 237
+        Top = 6
+        Width = 89
+        Height = 75
+        Caption = 'pnlBB1'
+        Color = 10681335
+        TabOrder = 1
+        object Label37: TLabel
+          Left = 13
+          Top = 6
+          Width = 60
+          Height = 13
+          AutoSize = False
+          Caption = #34917#21253#25968#37327' '
+        end
+        object butBb1: TTorryButton
+          Left = 8
+          Top = 48
+          Width = 75
+          Height = 25
+          Space = 0
+          Caption = #30830#23450#34917#21253
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ReflectionSize = 0
+          OnClick = butBb1Click
+        end
+        object bbNum1: TRzSpinEdit
+          Left = 13
+          Top = 23
+          Width = 68
+          Height = 21
+          Max = 50.000000000000000000
+          Min = -50.000000000000000000
+          TabOrder = 0
+        end
+      end
     end
     object RzGroupBox3: TRzGroupBox
       Left = 4
       Top = 207
       Width = 327
+      Height = 102
       TabOrder = 4
       object Label3: TLabel
         Left = 6
@@ -307,7 +348,7 @@ object frmCalWindows: TfrmCalWindows
       end
       object Card1: TRzEdit
         Left = 185
-        Top = 10
+        Top = 12
         Width = 138
         Height = 22
         Color = clInfoBk
@@ -381,9 +422,9 @@ object frmCalWindows: TfrmCalWindows
     end
     object RzGroupBox4: TRzGroupBox
       Left = 4
-      Top = 313
+      Top = 310
       Width = 327
-      Height = 120
+      Height = 117
       Caption = '1'#21495#21253#35013#32447#35013#36710#20449#24687
       Color = clSkyBlue
       TabOrder = 5
@@ -452,9 +493,9 @@ object frmCalWindows: TfrmCalWindows
     end
     object RzGroupBox5: TRzGroupBox
       Left = 4
-      Top = 435
+      Top = 429
       Width = 327
-      Height = 110
+      Height = 94
       Caption = '1# '#21943#30721#26426
       Color = 15521237
       TabOrder = 6
@@ -492,7 +533,7 @@ object frmCalWindows: TfrmCalWindows
       end
       object Label6: TLabel
         Left = 30
-        Top = 50
+        Top = 46
         Width = 72
         Height = 13
         AutoSize = False
@@ -500,7 +541,7 @@ object frmCalWindows: TfrmCalWindows
       end
       object Label7: TLabel
         Left = 41
-        Top = 84
+        Top = 74
         Width = 60
         Height = 13
         AutoSize = False
@@ -526,7 +567,7 @@ object frmCalWindows: TfrmCalWindows
       end
       object pmj1ccq: TRzEdit
         Left = 110
-        Top = 44
+        Top = 40
         Width = 212
         Height = 22
         Color = clInfoBk
@@ -544,7 +585,7 @@ object frmCalWindows: TfrmCalWindows
       end
       object pmj1pmnr: TRzEdit
         Left = 110
-        Top = 78
+        Top = 68
         Width = 212
         Height = 22
         Color = clInfoBk
@@ -573,9 +614,9 @@ object frmCalWindows: TfrmCalWindows
     end
     object Memo1: TMemo
       Left = 3
-      Top = 547
+      Top = 528
       Width = 328
-      Height = 113
+      Height = 100
       Lines.Strings = (
         'Memo1')
       TabOrder = 8
@@ -589,12 +630,91 @@ object frmCalWindows: TfrmCalWindows
         2143341208000000ED030000ED03000001568A64000006000000010000040000
         00020000802500000000080000000000000000003F00000001000000}
     end
+    object pnlWarn1: TPanel
+      Left = 1
+      Top = 633
+      Width = 333
+      Height = 74
+      Align = alBottom
+      BevelOuter = bvNone
+      Color = 8447623
+      TabOrder = 10
+      Visible = False
+      object lblWarn1: TLabel
+        Left = 8
+        Top = 4
+        Width = 241
+        Height = 13
+        AutoSize = False
+        Caption = #26412#25209#27425#24050#23569#20110'100'#21253','#35831#37325#26032#36755#20837' '
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clRed
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label40: TLabel
+        Left = 10
+        Top = 26
+        Width = 57
+        Height = 13
+        AutoSize = False
+        Caption = #27700#27877#25209#21495' '
+      end
+      object Label41: TLabel
+        Left = 10
+        Top = 48
+        Width = 59
+        Height = 13
+        AutoSize = False
+        Caption = #25209#21495#25968#37327' '
+      end
+      object Label42: TLabel
+        Left = 158
+        Top = 51
+        Width = 15
+        Height = 13
+        AutoSize = False
+        Caption = #21253' '
+      end
+      object butPh1: TTorryButton
+        Left = 224
+        Top = 32
+        Width = 75
+        Height = 25
+        Space = 0
+        Caption = #26356#26032#25209#21495
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ReflectionSize = 0
+        OnClick = butPh1Click
+      end
+      object edtSnph1: TRzEdit
+        Left = 69
+        Top = 22
+        Width = 106
+        Height = 21
+        TabOrder = 0
+      end
+      object edtSnph_Num1: TRzNumericEdit
+        Left = 69
+        Top = 46
+        Width = 81
+        Height = 21
+        TabOrder = 1
+        DisplayFormat = ',0;(,0)'
+      end
+    end
   end
   object pl2: TPanel
     Left = 334
     Top = 0
     Width = 341
-    Height = 712
+    Height = 708
     Color = 8447623
     TabOrder = 1
     object Panel3: TPanel
@@ -682,12 +802,12 @@ object frmCalWindows: TfrmCalWindows
       Left = 4
       Top = 76
       Width = 334
-      Height = 54
+      Height = 46
       Caption = #35745#25968#22120
       TabOrder = 2
       object tx2: TTorryButton
         Left = 270
-        Top = 20
+        Top = 17
         Width = 19
         Height = 19
         BorderColor = clGray
@@ -703,7 +823,7 @@ object frmCalWindows: TfrmCalWindows
       end
       object js2: TTorryButton
         Left = 303
-        Top = 20
+        Top = 17
         Width = 19
         Height = 19
         BorderColor = clGray
@@ -718,8 +838,8 @@ object frmCalWindows: TfrmCalWindows
         color = clLime
       end
       object Panel8: TPanel
-        Left = 38
-        Top = 16
+        Left = 56
+        Top = 13
         Width = 57
         Height = 25
         Caption = #36890#35759
@@ -733,9 +853,9 @@ object frmCalWindows: TfrmCalWindows
         TabOrder = 0
       end
       object jsqck2: TRzEdit
-        Left = 102
-        Top = 16
-        Width = 153
+        Left = 121
+        Top = 13
+        Width = 134
         Height = 26
         Color = clInfoBk
         Ctl3D = False
@@ -753,9 +873,9 @@ object frmCalWindows: TfrmCalWindows
     end
     object RzGroupBox7: TRzGroupBox
       Left = 4
-      Top = 131
+      Top = 123
       Width = 334
-      Height = 74
+      Height = 82
       TabOrder = 3
       object Label9: TLabel
         Left = 16
@@ -772,9 +892,9 @@ object frmCalWindows: TfrmCalWindows
         WordWrap = True
       end
       object ybzsl2: TRzEdit
-        Left = 64
-        Top = 7
-        Width = 213
+        Left = 55
+        Top = 11
+        Width = 174
         Height = 66
         Text = '0'
         Color = clNone
@@ -786,12 +906,53 @@ object frmCalWindows: TfrmCalWindows
         ParentFont = False
         TabOrder = 0
       end
+      object pnlBB2: TPanel
+        Left = 241
+        Top = 6
+        Width = 89
+        Height = 75
+        Caption = 'pnlBB1'
+        Color = 10681335
+        TabOrder = 1
+        object Label38: TLabel
+          Left = 13
+          Top = 6
+          Width = 60
+          Height = 13
+          AutoSize = False
+          Caption = #34917#21253#25968#37327' '
+        end
+        object butBb2: TTorryButton
+          Left = 8
+          Top = 48
+          Width = 75
+          Height = 25
+          Space = 0
+          Caption = #30830#23450#34917#21253
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ReflectionSize = 0
+          OnClick = butBb2Click
+        end
+        object bbNum2: TRzSpinEdit
+          Left = 13
+          Top = 23
+          Width = 68
+          Height = 21
+          Max = 50.000000000000000000
+          Min = -50.000000000000000000
+          TabOrder = 0
+        end
+      end
     end
     object RzGroupBox10: TRzGroupBox
       Left = 3
-      Top = 436
+      Top = 429
       Width = 334
-      Height = 111
+      Height = 95
       Caption = '2# '#21943#30721#26426
       Color = 15521237
       TabOrder = 4
@@ -829,7 +990,7 @@ object frmCalWindows: TfrmCalWindows
       end
       object Label13: TLabel
         Left = 42
-        Top = 50
+        Top = 47
         Width = 72
         Height = 13
         AutoSize = False
@@ -837,7 +998,7 @@ object frmCalWindows: TfrmCalWindows
       end
       object Label14: TLabel
         Left = 53
-        Top = 84
+        Top = 75
         Width = 60
         Height = 13
         AutoSize = False
@@ -863,7 +1024,7 @@ object frmCalWindows: TfrmCalWindows
       end
       object pmj2ccq: TRzEdit
         Left = 122
-        Top = 44
+        Top = 41
         Width = 208
         Height = 22
         Color = clInfoBk
@@ -881,7 +1042,7 @@ object frmCalWindows: TfrmCalWindows
       end
       object pmj2pmnr: TRzEdit
         Left = 122
-        Top = 78
+        Top = 69
         Width = 209
         Height = 22
         Color = clInfoBk
@@ -902,6 +1063,7 @@ object frmCalWindows: TfrmCalWindows
       Left = 4
       Top = 206
       Width = 334
+      Height = 103
       TabOrder = 5
       object Label10: TLabel
         Left = 8
@@ -1062,9 +1224,9 @@ object frmCalWindows: TfrmCalWindows
     end
     object RzGroupBox9: TRzGroupBox
       Left = 4
-      Top = 312
+      Top = 310
       Width = 334
-      Height = 122
+      Height = 117
       Caption = '2'#21495#21253#35013#32447#35013#36710#20449#24687
       Color = clSkyBlue
       TabOrder = 6
@@ -1132,9 +1294,9 @@ object frmCalWindows: TfrmCalWindows
     end
     object Memo2: TMemo
       Left = 3
-      Top = 549
+      Top = 528
       Width = 334
-      Height = 112
+      Height = 101
       Lines.Strings = (
         'Memo2')
       TabOrder = 7
@@ -1158,6 +1320,85 @@ object frmCalWindows: TfrmCalWindows
         2143341208000000ED030000ED03000001568A64000006000000010000040000
         00020000802500000000080000000000000000003F00000001000000}
     end
+    object pnlWarn2: TPanel
+      Left = 1
+      Top = 633
+      Width = 339
+      Height = 74
+      Align = alBottom
+      BevelOuter = bvNone
+      Color = 8447623
+      TabOrder = 10
+      Visible = False
+      object lblWarn2: TLabel
+        Left = 8
+        Top = 4
+        Width = 241
+        Height = 13
+        AutoSize = False
+        Caption = #26412#25209#27425#24050#23569#20110'100'#21253','#35831#37325#26032#36755#20837' '
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clRed
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label43: TLabel
+        Left = 10
+        Top = 26
+        Width = 57
+        Height = 13
+        AutoSize = False
+        Caption = #27700#27877#25209#21495' '
+      end
+      object Label44: TLabel
+        Left = 10
+        Top = 48
+        Width = 59
+        Height = 13
+        AutoSize = False
+        Caption = #25209#21495#25968#37327' '
+      end
+      object Label45: TLabel
+        Left = 158
+        Top = 51
+        Width = 15
+        Height = 13
+        AutoSize = False
+        Caption = #21253' '
+      end
+      object butPh2: TTorryButton
+        Left = 224
+        Top = 32
+        Width = 75
+        Height = 25
+        Space = 0
+        Caption = #26356#26032#25209#21495
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ReflectionSize = 0
+        OnClick = butPh2Click
+      end
+      object edtSnph2: TRzEdit
+        Left = 69
+        Top = 22
+        Width = 106
+        Height = 21
+        TabOrder = 0
+      end
+      object edtSnph_Num2: TRzNumericEdit
+        Left = 69
+        Top = 46
+        Width = 81
+        Height = 21
+        TabOrder = 1
+        DisplayFormat = ',0;(,0)'
+      end
+    end
   end
   object DKQ_MSComm: TMSComm
     Left = 544
@@ -1173,7 +1414,7 @@ object frmCalWindows: TfrmCalWindows
     Left = 676
     Top = 0
     Width = 338
-    Height = 712
+    Height = 708
     Color = 8447623
     TabOrder = 3
     object Panel7: TPanel
@@ -1261,7 +1502,7 @@ object frmCalWindows: TfrmCalWindows
       Left = 4
       Top = 76
       Width = 331
-      Height = 54
+      Height = 47
       Caption = #35745#25968#22120
       TabOrder = 2
       object tx3: TTorryButton
@@ -1297,8 +1538,8 @@ object frmCalWindows: TfrmCalWindows
         color = clLime
       end
       object Panel10: TPanel
-        Left = 38
-        Top = 16
+        Left = 61
+        Top = 12
         Width = 57
         Height = 25
         Caption = #36890#35759
@@ -1312,9 +1553,9 @@ object frmCalWindows: TfrmCalWindows
         TabOrder = 0
       end
       object jsqck3: TRzEdit
-        Left = 102
-        Top = 16
-        Width = 153
+        Left = 125
+        Top = 12
+        Width = 137
         Height = 26
         Color = clInfoBk
         Ctl3D = False
@@ -1332,13 +1573,13 @@ object frmCalWindows: TfrmCalWindows
     end
     object RzGroupBox12: TRzGroupBox
       Left = 4
-      Top = 131
+      Top = 124
       Width = 331
-      Height = 74
+      Height = 81
       TabOrder = 3
       object Label22: TLabel
         Left = 16
-        Top = 24
+        Top = 25
         Width = 31
         Height = 39
         Caption = #24050#35013#25968#37327'('#21253') '
@@ -1351,9 +1592,9 @@ object frmCalWindows: TfrmCalWindows
         WordWrap = True
       end
       object ybzsl3: TRzEdit
-        Left = 64
-        Top = 7
-        Width = 213
+        Left = 52
+        Top = 11
+        Width = 175
         Height = 66
         Text = '0'
         Color = clNone
@@ -1365,12 +1606,53 @@ object frmCalWindows: TfrmCalWindows
         ParentFont = False
         TabOrder = 0
       end
+      object pnlBB3: TPanel
+        Left = 241
+        Top = 6
+        Width = 89
+        Height = 75
+        Caption = 'pnlBB1'
+        Color = 10681335
+        TabOrder = 1
+        object Label39: TLabel
+          Left = 13
+          Top = 6
+          Width = 60
+          Height = 13
+          AutoSize = False
+          Caption = #34917#21253#25968#37327' '
+        end
+        object butBb3: TTorryButton
+          Left = 8
+          Top = 48
+          Width = 75
+          Height = 25
+          Space = 0
+          Caption = #30830#23450#34917#21253
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ReflectionSize = 0
+          OnClick = butBb3Click
+        end
+        object bbNum3: TRzSpinEdit
+          Left = 13
+          Top = 23
+          Width = 68
+          Height = 21
+          Max = 50.000000000000000000
+          Min = -50.000000000000000000
+          TabOrder = 0
+        end
+      end
     end
     object RzGroupBox13: TRzGroupBox
       Left = 3
-      Top = 436
+      Top = 428
       Width = 331
-      Height = 111
+      Height = 96
       Caption = '3# '#21943#30721#26426
       Color = 15521237
       TabOrder = 4
@@ -1408,7 +1690,7 @@ object frmCalWindows: TfrmCalWindows
       end
       object Label23: TLabel
         Left = 48
-        Top = 50
+        Top = 47
         Width = 72
         Height = 13
         AutoSize = False
@@ -1416,7 +1698,7 @@ object frmCalWindows: TfrmCalWindows
       end
       object Label24: TLabel
         Left = 59
-        Top = 84
+        Top = 75
         Width = 60
         Height = 13
         AutoSize = False
@@ -1442,7 +1724,7 @@ object frmCalWindows: TfrmCalWindows
       end
       object pmj3ccq: TRzEdit
         Left = 128
-        Top = 44
+        Top = 41
         Width = 200
         Height = 22
         Color = clInfoBk
@@ -1460,7 +1742,7 @@ object frmCalWindows: TfrmCalWindows
       end
       object pmj3pmnr: TRzEdit
         Left = 128
-        Top = 78
+        Top = 69
         Width = 201
         Height = 22
         Color = clInfoBk
@@ -1481,6 +1763,7 @@ object frmCalWindows: TfrmCalWindows
       Left = 4
       Top = 206
       Width = 331
+      Height = 103
       TabOrder = 5
       object Label25: TLabel
         Left = 8
@@ -1641,9 +1924,9 @@ object frmCalWindows: TfrmCalWindows
     end
     object RzGroupBox15: TRzGroupBox
       Left = 4
-      Top = 312
+      Top = 310
       Width = 331
-      Height = 122
+      Height = 117
       Caption = '3'#21495#21253#35013#32447#35013#36710#20449#24687
       Color = clSkyBlue
       TabOrder = 6
@@ -1711,9 +1994,9 @@ object frmCalWindows: TfrmCalWindows
     end
     object Memo3: TMemo
       Left = 3
-      Top = 549
+      Top = 528
       Width = 331
-      Height = 112
+      Height = 102
       Lines.Strings = (
         'Memo3')
       TabOrder = 7
@@ -1737,17 +2020,96 @@ object frmCalWindows: TfrmCalWindows
         2143341208000000ED030000ED03000001568A64000006000000010000040000
         00020000802500000000080000000000000000003F00000001000000}
     end
+    object pnlWarn3: TPanel
+      Left = 1
+      Top = 633
+      Width = 336
+      Height = 74
+      Align = alBottom
+      BevelOuter = bvNone
+      Color = 8447623
+      TabOrder = 10
+      Visible = False
+      object lblWarn3: TLabel
+        Left = 8
+        Top = 4
+        Width = 241
+        Height = 13
+        AutoSize = False
+        Caption = #26412#25209#27425#24050#23569#20110'100'#21253','#35831#37325#26032#36755#20837' '
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clRed
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label46: TLabel
+        Left = 10
+        Top = 26
+        Width = 57
+        Height = 13
+        AutoSize = False
+        Caption = #27700#27877#25209#21495' '
+      end
+      object Label47: TLabel
+        Left = 10
+        Top = 48
+        Width = 59
+        Height = 13
+        AutoSize = False
+        Caption = #25209#21495#25968#37327' '
+      end
+      object Label48: TLabel
+        Left = 158
+        Top = 51
+        Width = 15
+        Height = 13
+        AutoSize = False
+        Caption = #21253' '
+      end
+      object butPh3: TTorryButton
+        Left = 224
+        Top = 32
+        Width = 75
+        Height = 25
+        Space = 0
+        Caption = #26356#26032#25209#21495
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ReflectionSize = 0
+        OnClick = butPh3Click
+      end
+      object edtSnph3: TRzEdit
+        Left = 69
+        Top = 22
+        Width = 106
+        Height = 21
+        TabOrder = 0
+      end
+      object edtSnph_Num3: TRzNumericEdit
+        Left = 69
+        Top = 46
+        Width = 81
+        Height = 21
+        TabOrder = 1
+        DisplayFormat = ',0;(,0)'
+      end
+    end
   end
   object pnlXtcs: TPanel
     Left = 336
-    Top = 40
+    Top = 208
     Width = 336
     Height = 351
     Color = 33023
     TabOrder = 4
     object gb_pzxz: TGroupBox
       Left = 3
-      Top = 42
+      Top = 38
       Width = 330
       Height = 51
       Caption = #21697#31181#36873#25321
@@ -1771,7 +2133,7 @@ object frmCalWindows: TfrmCalWindows
     end
     object gb_bzxcs: TGroupBox
       Left = 3
-      Top = 94
+      Top = 193
       Width = 330
       Height = 113
       Caption = #21253#35013#32447#21442#25968
@@ -1842,7 +2204,7 @@ object frmCalWindows: TfrmCalWindows
     end
     object gb_pmjpz: TGroupBox
       Left = 3
-      Top = 208
+      Top = 91
       Width = 330
       Height = 100
       Caption = #21943#30721#26426#37197#32622
@@ -1883,7 +2245,7 @@ object frmCalWindows: TfrmCalWindows
       object pmj_ccqnrS: TRzEdit
         Left = 62
         Top = 73
-        Width = 69
+        Width = 71
         Height = 21
         TabOrder = 1
       end
@@ -1895,32 +2257,12 @@ object frmCalWindows: TfrmCalWindows
         ItemHeight = 13
         TabOrder = 2
       end
-      object pmj_Code: TRzComboBox
-        Left = 133
-        Top = 72
-        Width = 125
-        Height = 21
-        ItemHeight = 13
-        TabOrder = 3
-        Text = #23458#25143#20195#30721
-        Items.Strings = (
-          #26080
-          #23458#25143#20195#30721
-          #27700#27877#32534#21495
-          #23458#25143#20195#30721'+'#27700#27877#32534#21495)
-        ItemIndex = 1
-        Values.Strings = (
-          '0'
-          '1'
-          '2'
-          '3')
-      end
       object pmj_ccqnrE: TRzEdit
-        Left = 258
+        Left = 257
         Top = 72
-        Width = 65
+        Width = 66
         Height = 21
-        TabOrder = 4
+        TabOrder = 3
       end
       object pmjSfqy: TCheckBox
         Left = 74
@@ -1928,7 +2270,29 @@ object frmCalWindows: TfrmCalWindows
         Width = 138
         Height = 17
         Caption = #26159#21542#38656#35201#21551#29992#21943#30721
+        TabOrder = 4
+      end
+      object pmj_Code: TRzComboBox
+        Left = 135
+        Top = 72
+        Width = 121
+        Height = 21
+        ItemHeight = 13
         TabOrder = 5
+        Text = #25209#21495'+'#36816#33267#22320#20195#30721
+        Items.Strings = (
+          #26080
+          #25209#21495
+          #36816#33267#22320#20195#30721
+          #25209#21495'+'#36816#33267#22320#20195#30721
+          #36816#33267#22320#20195#30721'+'#25209#21495)
+        ItemIndex = 3
+        Values.Strings = (
+          '0'
+          '1'
+          '2'
+          '3'
+          '4')
       end
     end
     object butbxzOK: TButton
@@ -1963,7 +2327,7 @@ object frmCalWindows: TfrmCalWindows
     end
     object Panel1: TPanel
       Left = 1
-      Top = 4
+      Top = 3
       Width = 334
       Height = 33
       BevelOuter = bvNone
@@ -1979,23 +2343,23 @@ object frmCalWindows: TfrmCalWindows
   end
   object DataSource1: TDataSource
     Left = 152
-    Top = 552
+    Top = 536
   end
   object ds_getNextV: TDataSource
     Left = 240
-    Top = 552
+    Top = 536
   end
   object ds_getNextV2: TDataSource
     Left = 408
     Top = 552
   end
   object ds_AutoRefresh: TDataSource
-    Left = 72
-    Top = 552
+    Left = 64
+    Top = 536
   end
   object ds_Check: TDataSource
-    Left = 72
-    Top = 600
+    Left = 64
+    Top = 592
   end
   object tXhSf1: TTimer
     Enabled = False

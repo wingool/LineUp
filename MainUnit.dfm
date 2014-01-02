@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
-  Left = 285
-  Top = 204
+  Left = 236
+  Top = 168
   Width = 696
   Height = 480
   Caption = #21326#28070#27494#23459#29289#27969#31649#25511#31995#32479
@@ -18,7 +18,7 @@ object frmMain: TfrmMain
   TextHeight = 13
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 414
+    Top = 406
     Width = 688
     Height = 20
     Panels = <
@@ -51,7 +51,7 @@ object frmMain: TfrmMain
     Left = 0
     Top = 0
     Width = 688
-    Height = 414
+    Height = 406
     Style = pdNone
     LightColor = clBtnHighlight
     ShadowColor = clBtnShadow
